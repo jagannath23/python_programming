@@ -1,39 +1,63 @@
 import re
 
-# @todo make a class with functions
-# @todo make a function to add or substract
+HIGH_PRIORITY = 1
+MEDIUM_PRIORITY = 2
+LOW_PRIORITY = 3
+
+
+class Calculator:
+    operation_values = []
+    result = 0
+
+    def set_operation_values(self):
+        print("Ingresa una cuenta: ")
+        operation = input()
+        self.operation_values = re.findall(r'(?:[0-9]+)|(?:[/*+_=()-])', operation)
+
+    def get_operation_values(self):
+        return self.operation_values
+
+    def calculate(self, operation_priority):
+        symbols = ['*', '/'] if operation_priority == MEDIUM_PRIORITY else ['+', '-']
+        for position, value in enumerate(self.operation_values):
+            if value in symbols:
+                value_taked = float(self.operation_values[position - 1])
+                next_value = float(self.operation_values[position + 1])
+
+                self.result = self.get_result_med_priority_op(value_taked, next_value, value) \
+                    if operation_priority == MEDIUM_PRIORITY \
+                    else self.get_result_low_priority_op(value_taked, next_value, value)
+
+                self.operation_values[position - 1] = str(self.result)
+                self.operation_values.remove(value)
+                self.operation_values.remove(self.operation_values[position])
+
+    @staticmethod
+    def get_result_med_priority_op(value_taked, next_value, value):
+        return value_taked * next_value if value == '*' else value_taked / next_value
+
+    @staticmethod
+    def get_result_low_priority_op(value_taked, next_value, value):
+        return value_taked + next_value if value == '+' else value_taked - next_value
+
+
+calculator = Calculator()
 while 1:
-    # print("Ingresa una cuenta: ")
-    operation = input()
-    """ exp_reg: puede empezar con un numero y opcionalmente seguir con una operacion aritmetica
-    """
-    operation_values = re.findall(r'(?:[0-9]+)|(?:[/*+_=()-])', operation)
-    print(type(operation_values))
-    multiply_or_divide(operation_values)
+    first_qty = 0
+    second_qty = 0
+    calculator.set_operation_values()
+    for op_value in calculator.get_operation_values():
+        if op_value in ['*', '/']:
+            first_qty += 1
+        if op_value in ['+', '-']:
+            second_qty += 1
 
-    print(operation_values)
+    while first_qty > 0:
+        calculator.calculate(MEDIUM_PRIORITY)
+        first_qty -= 1
 
+    while second_qty > 0:
+        calculator.calculate(LOW_PRIORITY)
+        second_qty -= 1
 
-def multiply_or_divide(list_operation_values):
-    for position, value in enumerate(list_operation_values):
-        print("Value: " + value)
-        print(list_operation_values)
-        if value in ['*', '/']:
-            value_taked = float(list_operation_values[position - 1])
-            next_value = float(list_operation_values[position + 1])
-            print("Value: {} Position: {} value_taked: {} next_value: {}".format(value, position, value_taked,
-                                                                                 next_value))
-            result = value_taked * next_value if value == '*' \
-                else value_taked / next_value
-            print("Resultado parcial: {}".format(result))
-            list_operation_values[position - 1] = result
-            print(list_operation_values)
-            list_operation_values.remove(value)
-            print(list_operation_values)
-            list_operation_values.remove(list_operation_values[position])
-            print(list_operation_values)
-        elif value in ['+', '-']:
-            continue
-        else:
-            continue
-
+    print("Resultado final: {}".format(calculator.result))

@@ -9,6 +9,6 @@ a_number = random.randint(0, 10)
 other_number = random.randint(0, 10)
 
 print(a_number,
-      ("es mayor que" if a_number > other_number else "es menor que")
-      if a_number != other_number else "es igual a",
+      "is equals to" if a_number == other_number else
+      ("is greater than" if a_number > other_number else "is less than"),
       other_number)

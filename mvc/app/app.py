@@ -13,8 +13,8 @@ class App:
         try:
             a_user.set_name(name)
             print("correct name: " + a_user.get_name())
-        except InvalidNameException:
-            print("incorrect name: " + a_user.get_name())
+        except InvalidNameException as exception:
+            print(exception.get_message(name))
 
 
 app = App()

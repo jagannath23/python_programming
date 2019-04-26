@@ -3,7 +3,7 @@ import re
 from mvc.services.exceptions.invalid_name_exception import InvalidNameException
 
 # todo fix regex
-NAME_REGEX = r"[a-zA-z0-9._\\-]{3,}"
+NAME_REGEX = r"^[a-zA-Z0-9_.-]+$"
 
 
 class UserDataValidator:

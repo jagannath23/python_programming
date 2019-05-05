@@ -13,6 +13,7 @@ class Calculator:
         print("Enter an account: ")
         operation = input()
         # get the numerical and arithmetic values ​​of the operation
+        # @todo can separation by groups be applied?
         self.complete_operation = re.findall(r'(?:[0-9]+)|(?:[/*+_=()-])', operation)
 
     def get_operation_values(self):
